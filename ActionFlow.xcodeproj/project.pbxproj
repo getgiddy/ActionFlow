@@ -27,12 +27,24 @@
 		0B0551F12E01009300626962 /* ActionFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActionFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B0552002E01009400626962 /* ActionFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActionFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B05520A2E01009400626962 /* ActionFlowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActionFlowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0B05521D2E01014600626962 /* ActionFlow Sprint Document.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "ActionFlow Sprint Document.md"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0B59963D2E0227570065D4F7 /* Exceptions for "ActionFlow" folder in "ActionFlow" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				README.md,
+			);
+			target = 0B0551F02E01009300626962 /* ActionFlow */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0B0551F32E01009300626962 /* ActionFlow */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0B59963D2E0227570065D4F7 /* Exceptions for "ActionFlow" folder in "ActionFlow" target */,
+			);
 			path = ActionFlow;
 			sourceTree = "<group>";
 		};
@@ -80,7 +92,6 @@
 				0B0552032E01009400626962 /* ActionFlowTests */,
 				0B05520D2E01009400626962 /* ActionFlowUITests */,
 				0B0551F22E01009300626962 /* Products */,
-				0B05521D2E01014600626962 /* ActionFlow Sprint Document.md */,
 			);
 			sourceTree = "<group>";
 		};

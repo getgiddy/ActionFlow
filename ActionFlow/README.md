@@ -23,90 +23,14 @@ ActionFlow is an iOS app that automatically records meetings, transcribes audio,
 - **Networking**: URLSession for API calls
 - **Storage**: UserDefaults for MVP (no persistence needed initially)
 
-### App Structure
-```
-ActionFlow/
-├── Views/
-│   ├── RecordingView.swift      # Main recording interface
-│   ├── ProcessingView.swift     # Loading/transcription state
-│   └── ResultsView.swift        # Action items display
-├── Models/
-│   ├── ActionItem.swift         # Data model
-│   └── MeetingSession.swift     # Recording session data
-├── Services/
-│   ├── AudioRecorder.swift      # Recording functionality
-│   ├── SpeechService.swift      # Transcription
-│   └── AIService.swift          # OpenAI integration
-└── Utils/
-    └── APIKeys.swift            # Configuration
-```
-
-## Development Timeline (120 minutes)
-
-### Hour 1: Core Recording & UI (0-60 min)
-- [ ] **0-20 min**: Project setup & basic SwiftUI structure
-  - [ ] Create new iOS project
-  - [ ] Set up 3 main views (Recording, Processing, Results)
-  - [ ] Add microphone permissions to Info.plist
-  - [ ] Basic navigation structure
-
-- [ ] **20-45 min**: Audio recording implementation
-  - [ ] AVAudioRecorder setup
-  - [ ] Start/stop recording functionality
-  - [ ] Basic UI with record button
-  - [ ] Audio file management
-
-- [ ] **45-60 min**: Speech-to-text integration
-  - [ ] Speech framework setup
-  - [ ] Permission handling
-  - [ ] Audio file → text conversion
-  - [ ] Basic error handling
-
-### Hour 2: AI Processing & Results (60-120 min)
-- [ ] **60-90 min**: AI integration
-  - [ ] OpenAI API setup
-  - [ ] Create action item extraction prompt
-  - [ ] JSON response parsing
-  - [ ] Error handling for API calls
-
-- [ ] **90-110 min**: Results display
-  - [ ] ActionItem model creation
-  - [ ] Results list UI
-  - [ ] Basic sharing functionality
-  - [ ] Navigation between views
-
-- [ ] **110-120 min**: Polish & testing
-  - [ ] Loading states
-  - [ ] Error messages
-  - [ ] Test with sample audio
-  - [ ] Demo preparation
-
 ## Key Features (MVP)
 
 ### Core Features
-1. ✅ **One-tap recording** - Large, intuitive record button
-2. ✅ **Automatic transcription** - iOS Speech framework
-3. ✅ **AI action extraction** - OpenAI API integration
-4. ✅ **Clean results display** - List of action items
-5. ✅ **Basic sharing** - Share action items via iOS share sheet
-
-### Data Models
-```swift
-struct ActionItem {
-    let task: String
-    let assignee: String  // "unassigned" if not specified
-    let deadline: String  // "no deadline" if not mentioned
-    let priority: String? // Optional for v2
-}
-
-struct MeetingSession {
-    let id: UUID
-    let date: Date
-    let duration: TimeInterval
-    let transcript: String
-    let actionItems: [ActionItem]
-}
-```
+1. **One-tap recording** - Large, intuitive record button
+2. **Automatic transcription** - iOS Speech framework
+3. **AI action extraction** - OpenAI API integration
+4. **Clean results display** - List of action items
+5. **Basic sharing** - Share action items via iOS share sheet
 
 ## AI Prompt Design
 
@@ -193,5 +117,4 @@ Rules:
 ---
 
 **Last Updated**: June 17, 2025  
-**Status**: Planning Phase  
-**Next Action**: Begin Hour 1 development
+**Status**: MVP
