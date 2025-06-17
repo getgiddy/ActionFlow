@@ -6,56 +6,76 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @StateObject private var meetingSession = MeetingSession()
+    @StateObject private var speechService = SpeechService()
+    @State private var appState: AppState = .ready
+    @State private var audioURL: URL?
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+        NavigationView {
+            ZStack {
+                // Background gradient
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                // Main content based on state
+                switch appState {
+                case .ready, .recording:
+                    RecordingView(
+                        meetingSession: meetingSession,
+                        appState: $appState,
+                        onRecordingComplete: { url in
+                            audioURL = url
+                            startTranscription()
+                        }
+                    )
+                case .processing:
+                    ProcessingView()
+                case .results:
+                    ResultsView(
+                        meetingSession: meetingSession,
+                        appState: $appState
+                    )
                 }
-                .onDelete(perform: deleteItems)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
+            .navigationTitle("ActionFlow")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+    
+    private func startTranscription() {
+        guard let audioURL = audioURL else {
+            appState = .results
+            return
+        }
+        
+        speechService.transcribeAudio(from: audioURL) { transcript in
+            if let transcript = transcript {
+                meetingSession.transcript = transcript
+                // For now, we'll create dummy action items
+                // In Hour 2, we'll replace this with AI processing
+                createDummyActionItems()
+            }
+            appState = .results
         }
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
+    
+    private func createDummyActionItems() {
+        // Temporary dummy data for testing
+        meetingSession.actionItems = [
+            ActionItem(task: "Send client proposal", assignee: "John", deadline: "Friday"),
+            ActionItem(task: "Review Q4 budget", assignee: "Sarah", deadline: "Next Tuesday"),
+            ActionItem(task: "Update documentation", assignee: "unassigned", deadline: "no deadline")
+        ]
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
