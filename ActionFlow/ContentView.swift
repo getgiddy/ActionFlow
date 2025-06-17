@@ -10,8 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var meetingSession = MeetingSession()
     @StateObject private var speechService = SpeechService()
+    @StateObject private var aiService = AIService()
     @State private var appState: AppState = .ready
     @State private var audioURL: URL?
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
     
     var body: some View {
         NavigationView {
@@ -46,33 +49,62 @@ struct ContentView: View {
             }
             .navigationTitle("ActionFlow")
             .navigationBarTitleDisplayMode(.inline)
+            .alert("Error", isPresented: $showingAlert) {
+                Button("OK") { }
+            } message: {
+                Text(alertMessage)
+            }
+        }
+        .onAppear {
+            checkAPIConfiguration()
+        }
+    }
+    
+    private func checkAPIConfiguration() {
+        if !APIKeys.isConfigured() {
+            alertMessage = "API not configured. Using demo mode."
+            showingAlert = true
         }
     }
     
     private func startTranscription() {
         guard let audioURL = audioURL else {
-            appState = .results
+            showError("No audio file found")
             return
         }
         
         speechService.transcribeAudio(from: audioURL) { transcript in
             if let transcript = transcript {
                 meetingSession.transcript = transcript
-                // For now, we'll create dummy action items
-                // In Hour 2, we'll replace this with AI processing
-                createDummyActionItems()
+                print("Transcript: \(transcript)")
+                
+                // Now extract action items using AI
+                extractActionItems(from: transcript)
+            } else {
+                showError("Failed to transcribe audio")
             }
-            appState = .results
         }
     }
     
-    private func createDummyActionItems() {
-        // Temporary dummy data for testing
-        meetingSession.actionItems = [
-            ActionItem(task: "Send client proposal", assignee: "John", deadline: "Friday"),
-            ActionItem(task: "Review Q4 budget", assignee: "Sarah", deadline: "Next Tuesday"),
-            ActionItem(task: "Update documentation", assignee: "unassigned", deadline: "no deadline")
-        ]
+    private func extractActionItems(from transcript: String) {
+        aiService.extractActionItems(from: transcript) { actionItems in
+            DispatchQueue.main.async {
+                meetingSession.actionItems = actionItems
+                appState = .results
+                
+                if let error = aiService.error {
+                    showError("AI processing error: \(error)")
+                }
+            }
+        }
+    }
+    
+    private func showError(_ message: String) {
+        DispatchQueue.main.async {
+            alertMessage = message
+            showingAlert = true
+            appState = .results // Show results even with errors
+        }
     }
 }
 
