@@ -14,6 +14,13 @@ struct ActionItem: Identifiable, Codable {
     let task: String
     let assignee: String  // "unassigned" if not specified
     let deadline: String  // "no deadline" if not mentioned
+    
+    // Exclude 'id' from encoding/decoding since it's auto-generated
+    enum CodingKeys: String, CodingKey {
+        case task
+        case assignee
+        case deadline
+    }
 }
 
 // MARK: - Meeting Session Model
